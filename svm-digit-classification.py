@@ -22,7 +22,7 @@ def main():
     print("Entrenando, espere un momento...")
 
     #examples = len(data['train']['X']) # number of training images to use
-    examples = 1000;
+    examples = 1100;
     clfRBF.fit(data['train']['X'][:examples], data['train']['y'][:examples]) #training
     #clfLin.fit(data['train']['X'][:examples], data['train']['y'][:examples]) #training
 
