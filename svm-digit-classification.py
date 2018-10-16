@@ -20,26 +20,38 @@ def get_image(clf):
     imageArray = imageArray/255.0*2 - 1
     imageDigit=clf.predict(np.matrix(imageArray))
     print("digito clasificado: ", imageDigit[0])
-def analyze(clf,data):
+def analyze(clf,clf2,clf3,data):
     #problem 1.3 
 
     # Get confusion matrix
     from sklearn import metrics
     
     predicted = clf.predict(data['test']['X']) #predicting for the testing data
-    #predictedLin = clf2.predict(data['test']['X']) #predicting for the testing data
+    predictedLin = clf2.predict(data['test']['X']) #predicting for the testing data
+    predictedPoly = clf3.predict(data['test']['X']) #predicting for the testing data
     print("Confusion matrix for RBF kernel:\n%s" %
           metrics.confusion_matrix(data['test']['y'],
                                    predicted))
-    print("Accuracy: %0.4f" % metrics.accuracy_score(data['test']['y'],
+    print("metrics: \n")
+    print(metrics.classification_report(data['test']['y'],
                                                      predicted))
     print("\n")
-    #print("Confusion matrix for Linear kernel:\n%s" %
-     #     metrics.confusion_matrix(data['test']['y'],
-      #                             predictedLin))
-    #print("Accuracy: %0.4f" % metrics.accuracy_score(data['test']['y'],
-     #                                                predictedLin))                                                 
+    print("\n")
+    print("Confusion matrix for Linear kernel:\n%s" %
+         metrics.confusion_matrix(data['test']['y'],
+                                 predictedLin))
+    print("metrics: \n")
+    print(metrics.classification_report(data['test']['y'],
+                                                     predictedLin))   
 
+    print("\n")
+    print("\n")
+    print("Confusion matrix for Polynomial kernel:\n%s" %
+         metrics.confusion_matrix(data['test']['y'],
+                                 predictedPoly))
+    print("metrics: \n")                             
+    print(metrics.classification_report(data['test']['y'],
+                                                     predictedPoly))   
     # Print example
     #try_id = 4
     #out = clf.predict(data['test']['X'][try_id])  # clf.predict_proba
@@ -153,18 +165,22 @@ if __name__ == '__main__':
     clfLin = SVC(probability=False,  # cache_size=200,
               kernel="linear", C=2.8, gamma=.0073)
 
+    clfPoly = SVC(probability=False,  # cache_size=200,
+              kernel="poly", C=2.8, degree=3)          
+
     print("Entrenando, espere un momento...")
 
     #examples = len(data['train']['X']) # number of training images to use
-    examples = 4000;
+    examples = 1000;
     clfRBF.fit(data['train']['X'][:examples], data['train']['y'][:examples]) #training
-    #clfLin.fit(data['train']['X'][:examples], data['train']['y'][:examples]) #training
+    clfLin.fit(data['train']['X'][:examples], data['train']['y'][:examples]) #training
+    clfPoly.fit(data['train']['X'][:examples], data['train']['y'][:examples]) #training
 
     ###problem 1.3###########
-    analyze(clfRBF, data)
+    analyze(clfRBF,clfLin,clfPoly, data)
     #########################
     
-
+    ava=input("\n\n Escriba 1 para probar el clasificador \n\n ")
     while(True):
         print("\n\n dibuje un digito presione listo! y luego cierre la ventana\n\n ")
         root = Tk()
